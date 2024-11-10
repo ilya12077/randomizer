@@ -22,8 +22,11 @@ ping = 0
 
 with open(f'{path}data/userids.txt', 'r', encoding='utf-8') as f:
     gifted_userids = f.read().split()
-with open(f'{path}data/prizes.json', 'r', encoding='utf-8') as f:
+with open(f'{path}data/test.json', 'r', encoding='utf-8') as f:
     prizes = json.load(f)
+
+weights = [prizes['40']['odds'], prizes['50']['odds'], prizes['80']['odds']]
+categories = ['40', '50', '80']
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -49,19 +52,26 @@ def firewall():
         chat_id = str(r['callback_query']['message']['chat']['id'])
         if chat_id == r['callback_query']['data']:
             user_id = str(r['callback_query']['from']['id'])
+            first_name = str(r['callback_query']['from']['first_name'])
             if user_id not in gifted_userids:
-                if not prizes:
+                available_categories = [cat for cat in categories if prizes[cat]['codes']]
+                available_weights = [weights[categories.index(cat)] for cat in available_categories]
+                # Если нет доступных кодов во всех категориях, возвращаем None
+                if not available_categories:
                     tools.send_message(user_id, 'К сожалению, все призы закончились.')
-                else:
-                    chosen_prize = random.choice(prizes)
-                    prizes.remove(chosen_prize)
-                    tools.send_message(chat_id, f'Твоей удаче можно позавидовать! Ты получаешь {chosen_prize}')
+                    return None
+                chosen_category = random.choices(available_categories, weights=available_weights, k=1)[0]
+                if chosen_category in prizes and prizes[chosen_category]['codes']:
+                    # Извлекаем и удаляем первый код
+                    chosen_code = prizes[chosen_category]['codes'].pop(0)
+                    tools.send_message(chat_id, f'Ты выиграл {chosen_category} {chosen_code}')
                     gifted_userids.append(user_id)
                     with open(f'{path}data/userids.txt', 'w', encoding='utf-8') as f:
                         f.write(' '.join(gifted_userids))
-                    with open(f'{path}data/prizes.txt', 'w', encoding='utf-8') as f:
-                        f.write(''.join(prizes))
+                    with open("prizes.json", "w", encoding='utf-8') as file:
+                        json.dump(prizes, file, indent=2)
                     tools.delete_message(chat_id, r['callback_query']['message']['message_id'])
+                    tools.append_log(f'Выдан {chosen_category}%: {chosen_code} {first_name}({user_id})')
             else:
                 tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
         requests.post(tools.url + f"answerCallbackQuery?callback_query_id={r['callback_query']['id']}")
@@ -114,7 +124,7 @@ def dm_handler(r):
                     if not value["codes"]:  # Если список кодов пуст
                         tools.send_message(user_id, f"Коды для {key} закончились.")
                     else:
-                        tools.send_message(user_id, "Коды для {key} ещё есть ({len(value['codes'])} шт.).")
+                        tools.send_message(user_id, f"Коды для {key} ещё есть ({len(value['codes'])} шт.).")
             case _:
                 tools.send_message(user_id, 'Неизвестная команда')
 
@@ -125,3 +135,6 @@ if __name__ == '__main__':
     else:
         app.run(host='192.168.1.10', port=8890)
         # app.run(host='192.168.1.27', port=8889)
+# TODO:
+# нет кодов, категория выше, отдельная функц
+# по категориям хелпа
