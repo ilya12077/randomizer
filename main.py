@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import time
@@ -21,8 +22,8 @@ ping = 0
 
 with open(f'{path}data/userids.txt', 'r', encoding='utf-8') as f:
     gifted_userids = f.read().split()
-with open(f'{path}data/prizes.txt', 'r', encoding='utf-8') as f:
-    prizes = f.readlines()
+with open(f'{path}data/prizes.json', 'r', encoding='utf-8') as f:
+    prizes = json.load(f)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -54,7 +55,7 @@ def firewall():
                 else:
                     chosen_prize = random.choice(prizes)
                     prizes.remove(chosen_prize)
-                    tools.send_message(chat_id, f'вот твой приз поздравляю: {chosen_prize}')
+                    tools.send_message(chat_id, f'Твоей удаче можно позавидовать! Ты получаешь {chosen_prize}')
                     gifted_userids.append(user_id)
                     with open(f'{path}data/userids.txt', 'w', encoding='utf-8') as f:
                         f.write(' '.join(gifted_userids))
@@ -62,7 +63,7 @@ def firewall():
                         f.write(''.join(prizes))
                     tools.delete_message(chat_id, r['callback_query']['message']['message_id'])
             else:
-                tools.send_message(chat_id, 'Вы уже получили свой приз. Дайте шанс остальным!')
+                tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
         requests.post(tools.url + f"answerCallbackQuery?callback_query_id={r['callback_query']['id']}")
         return 'OK'
     if 'message' in r:
@@ -81,9 +82,9 @@ def dm_handler(r):
         match msg:
             case '/start':
                 if user_id not in gifted_userids:
-                    tools.send_message(user_id, 'Добро пожаловать! вижу тебя в первый раз', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
+                    tools.send_message(user_id, 'Добро пожаловать! Сегодня у тебя есть уникальная возможность выиграть призы от любимой группы!', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
                 else:
-                    tools.send_message(chat_id, 'Вы уже получили свой приз. Дайте шанс остальным!')
+                    tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
             case '/logs' if user_id == '647372660':
                 with open(f'{path}data/log.txt', 'r', encoding='utf-8') as f:
                     log = []
@@ -107,6 +108,13 @@ def dm_handler(r):
                             'parse_mode': 'HTML'
                         }
                     requests.post(tools.url + 'sendMessage', json=send_body)
+            case '/stat' if user_id == '647372660':
+                # Проверяем наличие кодов в каждом разделе
+                for key, value in prizes.items():
+                    if not value["codes"]:  # Если список кодов пуст
+                        tools.send_message(user_id, f"Коды для {key} закончились.")
+                    else:
+                        tools.send_message(user_id, "Коды для {key} ещё есть ({len(value['codes'])} шт.).")
             case _:
                 tools.send_message(user_id, 'Неизвестная команда')
 
