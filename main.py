@@ -70,15 +70,15 @@ def firewall():
                 if chosen_category in prizes and prizes[chosen_category]['codes']:
                     # Извлекаем и удаляем первый код
                     chosen_code = prizes[chosen_category]['codes'].pop(0)
-                    tools.send_message(chat_id, f'Поздравляю! Личная скидка для тебя по промокоду <code>{chosen_code}</code>. Сейчас расскажу на что она действует!')
-                    tools.send_message(user_id, categories_messages[category_to_index[chosen_category]])
                     gifted_userids.append(user_id)
-                    with open(f'{path}data/userids.txt', 'w', encoding='utf-8') as f:
-                        f.write(' '.join(gifted_userids))
                     with open(f'{path}data/prizes.json', 'w', encoding='utf-8') as f:
                         json.dump(prizes, f, indent=2)
                     tools.delete_message(chat_id, r['callback_query']['message']['message_id'])
+                    tools.send_message(chat_id, f'Поздравляю! Личная скидка для тебя по промокоду <code>{chosen_code}</code>. Сейчас расскажу на что она действует!')
+                    tools.send_message(user_id, categories_messages[category_to_index[chosen_category]])
                     tools.append_log(f'Выдан {chosen_category}%: {chosen_code} {first_name}({user_id})')
+                    with open(f'{path}data/userids.txt', 'w', encoding='utf-8') as f:
+                        f.write(' '.join(gifted_userids))
             else:
                 tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
         return 'OK'
@@ -99,7 +99,7 @@ def dm_handler(r):
             case '/start':
                 if user_id not in gifted_userids:
                 # if True:
-                    tools.send_message(user_id, 'Привет! Сегодня у тебя есть уникальная возможность выиграть призы от любимой группы!', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
+                    tools.send_message(user_id, 'Привет! Сегодня у тебя есть уникальная возможность выиграть призы!', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
                 else:
                     tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
             case '/logs' if user_id == '647372660':
@@ -142,6 +142,4 @@ if __name__ == '__main__':
     else:
         # app.run(host='192.168.1.10', port=8890)
         app.run(host='192.168.1.27', port=8890)
-# TODO:
-# нет кодов, категория выше, отдельная функц
-# по категориям хелпа
+
