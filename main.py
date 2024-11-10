@@ -58,8 +58,8 @@ def firewall():
             user_id = str(r['callback_query']['from']['id'])
             first_name = str(r['callback_query']['from']['first_name'])
             requests.post(tools.url + f"answerCallbackQuery?callback_query_id={r['callback_query']['id']}")
-            # if user_id not in gifted_userids:
-            if True:
+            if user_id not in gifted_userids:
+            # if True:
                 available_categories = [cat for cat in categories if prizes[cat]['codes']]
                 available_weights = [float(weights[categories.index(cat)]) for cat in available_categories]
                 # Если нет доступных кодов во всех категориях, возвращаем None
@@ -97,8 +97,9 @@ def dm_handler(r):
         msg = r['message']['text']
         match msg:
             case '/start':
-                if user_id not in gifted_userids or True:
-                    tools.send_message(user_id, 'Добро пожаловать! Сегодня у тебя есть уникальная возможность выиграть призы от любимой группы!', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
+                if user_id not in gifted_userids:
+                # if True:
+                    tools.send_message(user_id, 'Привет! Сегодня у тебя есть уникальная возможность выиграть призы от любимой группы!', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
                 else:
                     tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
             case '/logs' if user_id == '647372660':
