@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import re
 import time
 
 import requests
@@ -16,9 +17,7 @@ if os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False):
 else:
     path = ''
 
-pendingupdates_lastchecked = 0
-pendingupdates_lastsent = 0
-ping = 0
+pendingupdates_lastchecked, pendingupdates_lastsent, ping = 0, 0, 0
 
 with open(f'{path}data/userids.txt', 'r', encoding='utf-8') as f:
     gifted_userids = f.read().split()
@@ -59,7 +58,6 @@ def firewall():
             first_name = str(r['callback_query']['from']['first_name'])
             requests.post(tools.url + f"answerCallbackQuery?callback_query_id={r['callback_query']['id']}")
             if user_id not in gifted_userids:
-            # if True:
                 available_categories = [cat for cat in categories if prizes[cat]['codes']]
                 available_weights = [float(weights[categories.index(cat)]) for cat in available_categories]
                 # Если нет доступных кодов во всех категориях, возвращаем None
@@ -80,7 +78,7 @@ def firewall():
                     with open(f'{path}data/userids.txt', 'w', encoding='utf-8') as f:
                         f.write(' '.join(gifted_userids))
             else:
-                tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
+                tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
         return 'OK'
     if 'message' in r:
         ping = round(current_time - int(r['message']['date']), 2)
@@ -98,10 +96,9 @@ def dm_handler(r):
         match msg:
             case '/start':
                 if user_id not in gifted_userids:
-                # if True:
                     tools.send_message(user_id, 'Привет! Сегодня у тебя есть уникальная возможность выиграть призы!', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
                 else:
-                    tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!')
+                    tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
             case '/logs' if user_id == '647372660':
                 with open(f'{path}data/log.txt', 'r', encoding='utf-8') as f:
                     log = []
@@ -132,14 +129,25 @@ def dm_handler(r):
                         tools.send_message(user_id, f"Коды для {key}% закончились.")
                     else:
                         tools.send_message(user_id, f"Коды для {key}% ещё есть ({len(value['codes'])} шт.).")
+            case 'Показать мой приз':
+                with open(f'{path}data/log.txt', 'r', encoding='utf-8') as file:
+                    for line in file:
+                        if user_id in line:
+                            match = re.search(r']: Выдан (\d+)%: (\w{8}) ', line)
+                            if match:
+                                chosen_category = match.group(1)  # захватываем процент
+                                chosen_code = match.group(2)  # захватываем 8-значный код
+                                tools.send_message(chat_id, f'Поздравляю! Личная скидка для тебя по промокоду <code>{chosen_code}</code>. Сейчас расскажу на что она действует!')
+                                tools.send_message(user_id, categories_messages[category_to_index[chosen_category]])
+                                return 'ok'
+                    tools.send_message(chat_id, 'Ничего:(')
             case _:
-                tools.send_message(user_id, 'Неизвестная команда')
+                tools.send_message(user_id, 'Неизвестная команда', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
 
 
 if __name__ == '__main__':
     if os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False):
         serve(app, host='0.0.0.0', port=8881, url_scheme='http')
     else:
-        # app.run(host='192.168.1.10', port=8890)
-        app.run(host='192.168.1.27', port=8890)
-
+        app.run(host='192.168.1.10', port=8887)
+        # app.run(host='192.168.1.27', port=8890)
