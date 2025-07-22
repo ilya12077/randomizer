@@ -140,7 +140,7 @@ def dm_handler(r):
                                 tools.send_message(chat_id, f'Поздравляю! Личная скидка для тебя по промокоду <code>{chosen_code}</code>. Сейчас расскажу на что она действует!')
                                 tools.send_message(user_id, categories_messages[category_to_index[chosen_category]])
                                 return 'ok'
-                    tools.send_message(chat_id, 'Ничего:(')
+                    tools.send_message(chat_id, 'Вы еще не получали приз. Попробуйте /start')
             case _:
                 tools.send_message(user_id, 'Неизвестная команда', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
 
@@ -149,5 +149,5 @@ if __name__ == '__main__':
     if os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False):
         serve(app, host='0.0.0.0', port=8881, url_scheme='http')
     else:
-        app.run(host='192.168.1.10', port=8887)
+        app.run(host='192.168.1.10', port=8881)
         # app.run(host='192.168.1.27', port=8890)
