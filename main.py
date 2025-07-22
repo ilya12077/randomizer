@@ -32,7 +32,7 @@ categories_messages = ['🤑 <b>Личная скидка 40% на:</b>\n\nБе�
                        '🤑 <b>Личная скидка 80% на:</b> \n\nЛонгслив КН х 13 карат, Свитер "Chistmas Vibe" gray\n\n👽 <b>Скидка на весь каталог 30%</b>\n\n💚 Скидки не суммируются. Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net\n\n<i>акция действует до 2.12.2024</i>']
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/randomizer', methods=['GET', 'POST'])
 def firewall():
     global pendingupdates_lastchecked, pendingupdates_lastsent, ping
     if request.method == "GET":
@@ -146,8 +146,4 @@ def dm_handler(r):
 
 
 if __name__ == '__main__':
-    if os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False):
-        serve(app, host='localhost', port=1111, url_scheme='http')
-    else:
-        app.run(host='192.168.1.10', port=8881)
-        # app.run(host='192.168.1.27', port=8890)
+    serve(app, host='localhost', port=1111, url_scheme='http')
