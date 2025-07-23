@@ -24,10 +24,10 @@ with open(f'{path}data/userids.txt', 'r', encoding='utf-8') as f:
 with open(f'{path}data/prizes.json', 'r', encoding='utf-8') as f:
     prizes = json.load(f)
 
-weights = [float(prizes['40']['odds']), float(prizes['50']['odds']), float(prizes['80']['odds'])]
+weights = [float(prizes[0]['odds']), float(prizes[1]['odds']), float(prizes[2]['odds'])]
 categories = ['40', '50', '80']
 category_to_index = {'40': 0, '50': 1, '80': 2}
-categories_messages = ['''🤑 Личная скидка 20% на:
+categories_messages = ['''🤑 <b>Личная скидка 20% на:</b>
 Бейсболка «НЛО»
 Футболка «КН х тринадцать карат»
 Кепка «Halloween edition»
@@ -35,17 +35,24 @@ categories_messages = ['''🤑 Личная скидка 20% на:
 
 👽 Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net
 
-акция действует до 11.08🤑 Личная скидка 20% на:
-Бейсболка «НЛО»
-Футболка «КН х тринадцать карат»
-Кепка «Halloween edition»
-Носочки «НЛО» black/white
+акция действует до 11.08''','''🤑 <b>Личная скидка 30% на:</b>
+Оверсайз брюки бензин серые
+Оверсайз брюки базовые серые
+Оверсайз брюки базовые черные
+Худи «Серебро»
+
 
 👽 Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net
 
-акция действует до 11.08''',
-                       '🤑 <b>Личная скидка 50% на:</b> \n\nФутболка "Твои глаза" v.1, Футболка "Твои глаза" v.2, Футболка "Космос нас не ждет" gray, Футболка "Космос нас не ждет" black, Футболка КН х 13 карат, Худи "Бензин", Худи "Серебро" chocolate, Худи "Бензин" chocolate, Маска "Бензин"\n\n👽 <b>Скидка на весь каталог 30%</b>\n\n💚 Скидки не суммируются. Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net\n\n<i>акция действует до 2.12.2024</i>',
-                       '🤑 <b>Личная скидка 80% на:</b> \n\nЛонгслив КН х 13 карат, Свитер "Chistmas Vibe" gray\n\n👽 <b>Скидка на весь каталог 30%</b>\n\n💚 Скидки не суммируются. Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net\n\n<i>акция действует до 2.12.2024</i>']
+акция действует до 11.08''','''🤑 <b>Личная скидка 50% на:</b>
+Футболка «Космонавтов нет» v.2
+Тетрадь «Back to school»
+Набор значков «Back to school»
+Маска «Бензин»
+
+👽 Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net
+
+акция действует до 11.08''']
 
 
 @app.route('/randomizer', methods=['GET', 'POST'])
