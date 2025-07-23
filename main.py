@@ -26,8 +26,8 @@ with open(f'{path}data/prizes.json', 'r', encoding='utf-8') as f:
     prizes = json.load(f)
 
 weights = [float(prizes['40']['odds']), float(prizes['50']['odds']), float(prizes['80']['odds'])]
-categories = ['40', '50', '80']
-category_to_index = {'40': 0, '50': 1, '80': 2}
+categories = ['20', '30', '50']
+category_to_index = {'20': 0, '30': 1, '50': 2}
 categories_messages = ['''🤑 <b>Личная скидка 20% на:</b>
 Бейсболка «НЛО»
 Футболка «КН х тринадцать карат»
