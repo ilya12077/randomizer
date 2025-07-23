@@ -78,7 +78,7 @@ def firewall():
                     with open(f'{path}data/userids.txt', 'w', encoding='utf-8') as f:
                         f.write(' '.join(gifted_userids))
             else:
-                tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
+                tools.send_message(chat_id, 'Вы уже получили свой приз. Дайте шанс остальным!', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
         return 'OK'
     if 'message' in r:
         ping = round(current_time - int(r['message']['date']), 2)
@@ -98,7 +98,7 @@ def dm_handler(r):
                 if user_id not in gifted_userids:
                     tools.send_message(user_id, 'Привет! Сегодня у тебя есть уникальная возможность выиграть призы!', {'inline_keyboard': [[{'text': 'Попытать удачу', 'callback_data': chat_id}]]})
                 else:
-                    tools.send_message(chat_id, 'Ты уже получил свой приз. Дай шанс остальным!', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
+                    tools.send_message(chat_id, 'Вы уже получили свой приз. Дайте шанс остальным!', keyboard={'keyboard': [[{'text': 'Показать мой приз'}]], 'resize_keyboard': True})
             case '/logs' if user_id == '647372660':
                 with open(f'{path}data/log.txt', 'r', encoding='utf-8') as f:
                     log = []
