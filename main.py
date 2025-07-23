@@ -63,7 +63,6 @@ def firewall():
     r = request.get_json()
     with open(f'{path}data/quires.txt', 'a', encoding='utf-8') as f:
         f.write(str(r) + '\n')
-    print(r)
     current_time = time.time()
     if current_time - pendingupdates_lastchecked > 60:
         pendingupdates_lastchecked = current_time
@@ -105,7 +104,6 @@ def firewall():
         return 'OK'
     if 'message' in r:
         ping = round(current_time - int(r['message']['date']), 2)
-        print(f'ping: {ping}s. ')
         if r['message']['chat']['type'] == 'private':
             dm_handler(r)
     return 'OK'
