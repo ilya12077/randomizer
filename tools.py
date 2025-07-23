@@ -16,7 +16,7 @@ for filename in ['log.txt', 'quires.txt', 'userids.txt']:
     if not os.path.isfile(f'{path}data/{filename}'):
         # Создаем файл, если он не существует
         with open(f'{path}data/{filename}', 'w', encoding='utf-8') as fl:
-            fl.write('1')
+            fl.write('')
 
 
 def send_message(chat_id: int | str, message, keyboard=None) -> bool:
