@@ -6,7 +6,7 @@ import requests
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
-url = os.environ.get('URL')
+url = 'https://api.telegram.org/bot7593480934:AAF_G3R_6D590Wp_6ao0IWgHYH6yi461Bc0/'
 if os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False):
     path = '/etc/randomizer/'
 else:
