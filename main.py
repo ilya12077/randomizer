@@ -25,7 +25,7 @@ with open(f'{path}data/userids.txt', 'r', encoding='utf-8') as f:
 with open(f'{path}data/prizes.json', 'r', encoding='utf-8') as f:
     prizes = json.load(f)
 
-weights = [float(prizes['40']['odds']), float(prizes['50']['odds']), float(prizes['80']['odds'])]
+weights = [float(prizes['20']['odds']), float(prizes['30']['odds']), float(prizes['50']['odds'])]
 categories = ['20', '30', '50']
 category_to_index = {'20': 0, '30': 1, '50': 2}
 categories_messages = ['''🤑 <b>Личная скидка 20% на:</b>
