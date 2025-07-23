@@ -46,7 +46,7 @@ def append_log(msg, ping: int = None) -> None:
     try:
         with open(f'{path}data/log.txt', 'a', encoding='utf-8') as f:
             if not ping:
-                f.write(f'[{datetime.datetime.now(pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S")}]: {msg}' + '\n')
+                f.write(f'[{datetime.datetime.now(pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S.%fffff")}]: {msg}' + '\n')
             else:
                 f.write(f'[{datetime.datetime.now(pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S")}]<b>({ping}s.)</b> : {msg}' + '\n')
         print(msg)
