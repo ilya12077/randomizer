@@ -25,35 +25,39 @@ with open(f'{path}data/userids.txt', 'r', encoding='utf-8') as f:
 with open(f'{path}data/prizes.json', 'r', encoding='utf-8') as f:
     prizes = json.load(f)
 
-weights = [float(prizes['20']['odds']), float(prizes['30']['odds']), float(prizes['50']['odds'])]
-categories = ['20', '30', '50']
-category_to_index = {'20': 0, '30': 1, '50': 2}
-categories_messages = ['''🤑 <b>Личная скидка 20% на:</b>
-Бейсболка «НЛО»
-Футболка «КН х тринадцать карат»
-Кепка «Halloween edition»
+weights = [float(prizes['40']['odds']), float(prizes['30']['odds']), float(prizes['50']['odds'])]
+categories = ['40', '30', '50']
+category_to_index = {'40': 0, '30': 1, '50': 2}
+categories_messages = ['''🤑 <b>Личная скидка 40% на:</b>
+Оверсайз брюки бензин серые/черные
+Оверсайз брюки базовые серые/черные
+Оверсайз брюки «こんにちは» (все цвета)
+Худи «Серебро» 
+Футболка «LOVE»
+Футболка «LOVE» over-size
+
+👽 Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net
+
+акция действует до 14.11''', '''🤑 <b>Личная скидка 30% на:</b>
+Авоська «Эльмира»
+Футболка «Kyoto»
 Носочки «НЛО» black/white
-
-👽 Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net
-
-акция действует до 11.08''','''🤑 <b>Личная скидка 30% на:</b>
-Оверсайз брюки бензин серые
-Оверсайз брюки базовые серые
-Оверсайз брюки базовые черные
-Худи «Серебро»
+Футболка «こんにちは»(все цвета)
 
 
 👽 Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net
 
-акция действует до 11.08''','''🤑 <b>Личная скидка 50% на:</b>
+акция действует до 14.11''', '''🤑 <b>Личная скидка 50% на:</b>
+Бейсболка «НЛО»
+Футболка КН х тринадцать карат
 Футболка «Космонавтов нет» v.2
-Тетрадь «Back to school»
+Кепка «Halloween Edition»
 Набор значков «Back to school»
 Маска «Бензин»
 
 👽 Забирай выигрыш на сайте: https://invmerch.ru/collection/kosmonavtov-net
 
-акция действует до 11.08''']
+акция действует до 14.11''']
 
 
 @app.route('/randomizer', methods=['GET', 'POST'])
@@ -62,8 +66,8 @@ def firewall():
     if request.method == "GET":
         return 'I\'m working'
     r = request.get_json()
-    #with open(f'{path}data/quires.txt', 'a', encoding='utf-8') as f:
-        #f.write(f'[{datetime.datetime.now(pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S.%f")}]: ' + str(r) + '\n')
+    with open(f'{path}data/quires.txt', 'a', encoding='utf-8') as f:
+        f.write(f'[{datetime.datetime.now(pytz.timezone("Europe/Moscow")).strftime("%H:%M:%S.%f")}]: ' + str(r) + '\n')
     current_time = time.time()
     if current_time - pendingupdates_lastchecked > 60:
         pendingupdates_lastchecked = current_time
